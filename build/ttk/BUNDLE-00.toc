@@ -1,3 +1,0 @@
-([('ttk',
-   '/Users/fabioluna/Documents/codes/swiss_control/dist/ttk',
-   'EXECUTABLE')],)
