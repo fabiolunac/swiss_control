@@ -2,7 +2,7 @@ import pandas as pd
 from parameters import *
 
 def main():
-    df = pd.read_excel(path)
+    df = pd.read_excel(PATH)
 
     last_line = df.iloc[-1]
 

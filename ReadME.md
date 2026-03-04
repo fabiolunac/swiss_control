@@ -26,3 +26,12 @@ Crie e ative um ambiente virtual:
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
+```
+
+## Gerar aplicativo
+
+Para gerar um novo aplicativo executável, rode o seguinte comando:
+
+```
+pyinstaller --onefile --windowed ttk.py
+```
