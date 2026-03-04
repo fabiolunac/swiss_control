@@ -5,13 +5,14 @@ class App():
     def __init__(self, root):
         self.root = root
         self.root.title('Teste TTK')
-        self.root.geometry("360x300")
+        self.root.geometry("360x600")
 
         self.root.bind("<Return>", lambda event: self.salvar())
         self.root.bind("<Escape>", lambda event: root.destroy())
 
         self.criar_widgets()
         self.configurar_estilo()
+        # self.read_saldo()
 
     def configurar_estilo(self):
         self.style = ttk.Style(self.root)
@@ -20,6 +21,23 @@ class App():
         self.style.configure("TLabel", font=("Arial", 14))
         self.style.configure("TButton", font=("Arial", 14, "bold"), padding=10)
         self.style.configure("TEntry", padding=6)
+
+    def read_last_line(self):
+        self.df = pd.read_excel(PATH)
+
+        last_values = self.df.iloc[-1].to_dict()
+
+        last_data = last_values['Data']
+
+        last_local = last_values['Local']
+
+        last_valor = last_values['Valor']
+
+        last_line = f'{last_data.strftime('%d/%m')} | {last_local} | {last_valor} CHF'
+
+        self.lastdados_var.set(last_line)
+
+        # print(last_data, last_local, last_valor)
     
 
     def criar_widgets(self):
@@ -31,7 +49,7 @@ class App():
         # ----------- Campo de Data -----------
         ttk.Label(self.frame, text="Data").grid(row=1, column=0, sticky='w', pady=6)
 
-        self.data_var = tk.StringVar(value=today)
+        self.data_var = tk.StringVar(value=TODAY)
         self.data_entry = ttk.Entry(self.frame, width=20, textvariable=self.data_var)
         self.data_entry.grid(row=1, column=1, sticky='ew', pady=6)
 
@@ -51,6 +69,13 @@ class App():
         self.btn_salvar = ttk.Button(self.frame, text='Salvar Valores', command=self.salvar)
         self.btn_salvar.grid(row=4, column=0, columnspan=2, sticky='ew', pady=6)
 
+        # ----------- Botão para mostrar saldo -----------
+        self.btn_salvar = ttk.Button(self.frame, text='Últimos Dados', command=self.read_last_line)
+        self.btn_salvar.grid(row=5, column=0, columnspan=2, sticky='ew', pady=1)
+
+        # ----------- Label para últimos dados -----------
+        self.lastdados_var = tk.StringVar()
+        ttk.Label(self.frame, textvariable=self.lastdados_var).grid(row=6, column=0, sticky='ew', pady=6)
 
         self.frame.columnconfigure(1, weight=1)
 
@@ -70,12 +95,12 @@ class App():
 
         dados = [data, self.local_entry.get(), valor]
 
-        wb = load_workbook(path)
+        wb = load_workbook(PATH)
 
         ws = wb[sheet_name] if sheet_name else wb.active
         ws.append(dados)
         ws.cell(row=ws.max_row, column=1).number_format = "DD/MM/YYYY"
-        wb.save(path)
+        wb.save(PATH)
 
         print(f'Valores adicionados! {dados}')
 
@@ -90,3 +115,4 @@ if __name__ == "__main__":
 
 
 #teste
+# pyinstaller --onefile --windowed app.py

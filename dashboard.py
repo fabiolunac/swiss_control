@@ -1,7 +1,12 @@
 import pandas as pd
+from parameters import *
 
 def main():
-    pass
+    df = pd.read_excel(path)
+
+    last_line = df.iloc[-1]
+
+    print(last_line['Saldo'])
 
 
 if __name__ == "__main__":
