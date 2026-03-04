@@ -12,7 +12,6 @@ class App():
 
         self.criar_widgets()
         self.configurar_estilo()
-        # self.read_saldo()
 
     def configurar_estilo(self):
         self.style = ttk.Style(self.root)
@@ -36,8 +35,6 @@ class App():
         last_line = f'{last_data.strftime('%d/%m')} | {last_local} | {last_valor} CHF'
 
         self.lastdados_var.set(last_line)
-
-        # print(last_data, last_local, last_valor)
     
 
     def criar_widgets(self):
