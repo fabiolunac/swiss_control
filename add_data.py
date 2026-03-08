@@ -1,4 +1,5 @@
 from parameters import *
+from excel_utils import salvar_dados, read_last_line
 
 class Add_Data(ttk.Frame):
     def __init__(self, parent):
@@ -33,7 +34,7 @@ class Add_Data(ttk.Frame):
         self.btn_salvar.grid(row=4, column=0, columnspan=2, sticky='ew', pady=6)
 
         # ----------- Botão para mostrar saldo -----------
-        self.btn_lastdata= ttk.Button(self, text='Últimos Dados', command=self.read_last_line)
+        self.btn_lastdata= ttk.Button(self, text='Últimos Dados', command=self.read_last_line_method)
         self.btn_lastdata.grid(row=5, column=0, columnspan=2, sticky='ew', pady=6)
 
         # ----------- Label para últimos dados -----------
@@ -67,12 +68,7 @@ class Add_Data(ttk.Frame):
 
         dados = [data, self.local_entry.get(), valor]
 
-        wb = load_workbook(PATH)
-
-        ws = wb[sheet_name] if sheet_name else wb.active
-        ws.append(dados)
-        ws.cell(row=ws.max_row, column=1).number_format = "DD/MM/YYYY"
-        wb.save(PATH)
+        salvar_dados(PATH, dados)
 
         dados_line = f"Dados adicionados: \n{data.strftime('%d/%m')} | {self.local_entry.get()} | {valor} CHF"
 
@@ -81,17 +77,9 @@ class Add_Data(ttk.Frame):
 
         self.dadosadd.set(dados_line)
 
-    def read_last_line(self):
-        self.df = pd.read_excel(PATH)
+    def read_last_line_method(self):
+        data, local, valor = read_last_line(PATH)
 
-        last_values = self.df.iloc[-1].to_dict()
-
-        last_data = last_values['Data']
-
-        last_local = last_values['Local']
-
-        last_valor = last_values['Valor']
-
-        last_line = f"{last_data.strftime('%d/%m')} | {last_local} | {last_valor} CHF"
+        last_line = f"{data.strftime('%d/%m')} | {local} | {valor} CHF"
 
         self.lastdados_var.set(last_line)
