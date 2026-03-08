@@ -1,17 +1,17 @@
 from parameters import *
 
-class App():
 
+class App():
     def __init__(self, root):
         self.root = root
         self.root.title('Teste TTK')
-        self.root.geometry("360x600")
+        self.root.geometry("1280x720")
 
         self.root.bind("<Return>", lambda event: self.salvar())
-        self.root.bind("<Escape>", lambda event: root.destroy())
+        self.root.bind("<Escape>", lambda event: self.root.destroy())
 
-        self.criar_widgets()
         self.configurar_estilo()
+        self.criar_widgets()
 
     def configurar_estilo(self):
         self.style = ttk.Style(self.root)
@@ -72,9 +72,21 @@ class App():
 
         # ----------- Label para últimos dados -----------
         self.lastdados_var = tk.StringVar()
-        ttk.Label(self.frame, textvariable=self.lastdados_var).grid(row=6, column=0, sticky='w', pady=6)
+        ttk.Label(self.frame, textvariable=self.lastdados_var).grid(
+            row=6, column=0, sticky='w', pady=6, columnspan=2
+            )
+
+        # ----------- Label para dados adicionados -----------
+        self.dadosadd = tk.StringVar()
+        ttk.Label(self.frame, textvariable=self.dadosadd).grid(
+            row=7, column=0, sticky='w', pady=6, columnspan=2
+            )
 
         self.frame.columnconfigure(1, weight=1)
+        self.frame.columnconfigure(0, weight=0)
+
+        # ----------- Label para gráfico -----------
+        # ttk.Label
 
     def salvar(self, sheet_name=None):
         try:
@@ -99,10 +111,13 @@ class App():
         ws.cell(row=ws.max_row, column=1).number_format = "DD/MM/YYYY"
         wb.save(PATH)
 
-        print(f'Valores adicionados! {dados}')
+        dados_line = f"Dados adicionados: \n{data.strftime('%d/%m')} | {self.local_entry.get()} | {valor} CHF"
 
         self.local_var.set("")
         self.valor_var.set("")
+
+
+        self.dadosadd.set(dados_line)
 
 
 if __name__ == "__main__":

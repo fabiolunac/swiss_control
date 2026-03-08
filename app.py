@@ -7,9 +7,10 @@ class App:
     def __init__(self, root):
         self.root = root
         self.root.title('TESTE NOTEBOOK')
-        self.root.geometry('800x400')
+        self.root.geometry('500x400')
 
         self.root.bind("<Escape>", lambda event: self.root.destroy())
+        self.root.bind("<Return>", lambda event: self.salvar())
 
         self.configurate_style()
         self.create_widgets()
@@ -20,7 +21,7 @@ class App:
         self.notebook.pack(expand=True, fill='both')
 
         # Instancia as abas
-        self.Add_Data = Add_Data(self.notebook)
+        self.Add_Data       = Add_Data(self.notebook)
         self.Visualize_Data = Visualize_Data(self.notebook)
 
         # Add abas no notebook
