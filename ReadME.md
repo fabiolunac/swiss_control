@@ -1,4 +1,4 @@
-# Swiss Control (Tkinter + TTK)
+# Finance App (Tkinter + TTK)
 
 Pequeno app em Python com interface gráfica (Tkinter/TTK) para registrar gastos/entradas em uma planilha Excel e visualizar rapidamente a última linha registrada.
 
