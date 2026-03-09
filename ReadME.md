@@ -33,5 +33,5 @@ source .venv/bin/activate
 Para gerar um novo aplicativo executável, rode o seguinte comando:
 
 ```
-pyinstaller --onefile --windowed ttk.py
+pyinstaller --onefile --windowed app.py
 ```

@@ -1,5 +1,5 @@
 from parameters import *
-from excel_utils import salvar_dados, read_last_line
+from excel_utils import *
 
 class Add_Data(ttk.Frame):
     def __init__(self, parent):
@@ -8,7 +8,7 @@ class Add_Data(ttk.Frame):
         self.create_widgets()
 
     def create_widgets(self):
-        ttk.Label(self, text='Salvar Valores').grid(row=0, column=0, sticky='ew', columnspan=2, pady=6)
+        ttk.Label(self, text='Salvar Valores', anchor='center').grid(row=0, column=0, sticky='ew', columnspan=2, pady=6)
 
         # ----------- Campo de Data -----------
         ttk.Label(self, text="Data").grid(row=1, column=0, sticky='w', pady=6)
@@ -24,29 +24,41 @@ class Add_Data(ttk.Frame):
         self.local_entry.grid(row=2, column=1, sticky='ew', pady=6)
 
         # ----------- Campo de Valor -----------
-        ttk.Label(self, text="Valor (CHF)").grid(row=3, column=0, sticky='w', pady=6)
+        ttk.Label(self, text="Valor").grid(row=3, column=0, sticky='w', pady=6)
         self.valor_var = tk.StringVar()
         self.valor_entry = ttk.Entry(self, width=20, textvariable=self.valor_var)
         self.valor_entry.grid(row=3, column=1, sticky='ew', pady=6)
 
+        # ----------- Campo de Moeda -----------
+        ttk.Label(self, text="Moeda").grid(row=4, column=0, sticky='w', pady=6)
+        self.moeda_var = tk.StringVar(value='CHF')
+        self.moeda_box = ttk.Combobox(
+            self,
+            textvariable=self.moeda_var,
+            values=["CHF", "EUR"],
+            state="readonly",
+            width=17
+        )
+        self.moeda_box.grid(row=4, column=1, sticky='ew', pady=6)
+
         # ----------- Botão para salvar -----------
         self.btn_salvar = ttk.Button(self, text='Salvar Valores', command=self.salvar)
-        self.btn_salvar.grid(row=4, column=0, columnspan=2, sticky='ew', pady=6)
+        self.btn_salvar.grid(row=5, column=0, columnspan=2, sticky='ew', pady=6)
 
         # ----------- Botão para mostrar saldo -----------
         self.btn_lastdata= ttk.Button(self, text='Últimos Dados', command=self.read_last_line_method)
-        self.btn_lastdata.grid(row=5, column=0, columnspan=2, sticky='ew', pady=6)
+        self.btn_lastdata.grid(row=6, column=0, columnspan=2, sticky='ew', pady=6)
 
         # ----------- Label para últimos dados -----------
         self.lastdados_var = tk.StringVar()
         ttk.Label(self, textvariable=self.lastdados_var).grid(
-            row=6, column=0, sticky='w', pady=6, columnspan=2
+            row=7, column=0, sticky='w', pady=6, columnspan=2
             )
 
         # ----------- Label para dados adicionados -----------
         self.dadosadd = tk.StringVar()
         ttk.Label(self, textvariable=self.dadosadd).grid(
-            row=7, column=0, sticky='w', pady=6, columnspan=2
+            row=8, column=0, sticky='w', pady=6, columnspan=2
             )
 
         self.columnconfigure(1, weight=1)
@@ -66,11 +78,20 @@ class Add_Data(ttk.Frame):
         except ValueError:
             valor = valor_raw
 
-        dados = [data, self.local_entry.get(), valor]
+        moeda = self.moeda_var.get()
+        if moeda == 'EUR':
+            rate = eur_chf()
+            valor_eur = valor * rate
+            valor_chf = valor_eur
+        else:
+            valor_chf = valor
+
+
+        dados = [data, self.local_entry.get(), valor_chf]
 
         salvar_dados(PATH, dados)
 
-        dados_line = f"Dados adicionados: \n{data.strftime('%d/%m')} | {self.local_entry.get()} | {valor} CHF"
+        dados_line = f"Dados adicionados: \n{data.strftime('%d/%m')} | {self.local_entry.get()} | {valor_chf} CHF"
 
         self.local_var.set("")
         self.valor_var.set("")

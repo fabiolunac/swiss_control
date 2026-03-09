@@ -6,11 +6,11 @@ from visualize_data import Visualize_Data
 class App:
     def __init__(self, root):
         self.root = root
-        self.root.title('TESTE NOTEBOOK')
-        self.root.geometry('500x400')
+        self.root.title('FINANCE APP')
+        self.root.geometry('500x700')
 
         self.root.bind("<Escape>", lambda event: self.root.destroy())
-        self.root.bind("<Return>", lambda event: self.salvar())
+        self.root.bind("<Return>", lambda event: self.Add_Data.salvar())
 
         self.configurate_style()
         self.create_widgets()
@@ -33,8 +33,10 @@ class App:
         self.style.theme_use("aqua")
 
         self.style.configure("TLabel", font=("Arial", 14))
-        self.style.configure("TButton", font=("Arial", 14, "bold"), padding=10)
+        self.style.configure("TButton", font=("Arial", 14, "bold"), padding=1)
         self.style.configure("TEntry", padding=6)
+        self.style.configure("TCombobox", padding=6)
+        
 
 if __name__ == "__main__":
     root = tk.Tk()
