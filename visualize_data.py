@@ -1,28 +1,40 @@
 from parameters import *
+from excel_utils import *
 
 class Visualize_Data(ttk.Frame):
     def __init__(self, parent):
         super().__init__(parent)
         
-        self.create_widgets()
-        self.create_figure()
+        self.create_layout()
+        self.show_graphs()
 
-    def create_figure(self):
-        self.fig = Figure(figsize=(4,4))
-        self.ax = self.fig.add_subplot(111)
+    def create_layout(self):
+        self.columnconfigure(0, weight=1)
+        self.columnconfigure(1, weight=1)
 
-        x = [1, 2, 3, 4]
-        y = [100, 150, 120, 180]
+        self.rowconfigure(0, weight=1)
 
-        self.ax.plot(x, y)
-        self.ax.set_title("Exemplo de gráfico")
-        self.ax.set_xlabel("Pontos")
-        self.ax.set_ylabel("Valor")
+        self.frame_graf1 = ttk.Frame(self, width=400, height=250)
+        self.frame_graf1.grid(row=0, column=0, padx=10, pady=10)
+        self.frame_graf1.pack_propagate(False)
 
-        self.canvas = FigureCanvasTkAgg(self.fig, master=self)
-        self.canvas.draw()
-        self.canvas.get_tk_widget().pack()
+        # self.frame_graf2 = ttk.Frame(self, width=400, height=250)
+        # self.frame_graf2.grid(row=0, column=1, padx=10, pady=10)
+        # self.frame_graf2.pack_propagate(False)
 
-    def create_widgets(self):
-        ttk.Label(self, text='Teste').pack(pady=10)
+
+    def show_graphs(self):
+        # gera figura -> cria o canvas -> desenha -> pack
+        fig1 = fig_gastos_por_dia()
+        # fig2 = fig_gastos_categoria()
+
+        self.canvas1 = FigureCanvasTkAgg(fig1, master=self.frame_graf1)
+        self.canvas1.draw()
+        self.canvas1.get_tk_widget().pack()
+
+        # self.canvas2 = FigureCanvasTkAgg(fig2, master=self.frame_graf2)
+        # self.canvas2.draw()
+        # self.canvas2.get_tk_widget().pack()
+
+
         
