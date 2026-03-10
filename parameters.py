@@ -5,6 +5,7 @@ from openpyxl import load_workbook
 import pandas as pd
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+from tkcalendar import DateEntry
 
 TODAY = datetime.now().strftime("%d/%m")
 PATH = "/Users/fabioluna/OneDrive - CERN/Swiss Control.xlsx"

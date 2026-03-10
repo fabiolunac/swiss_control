@@ -8,14 +8,21 @@ class Add_Data(ttk.Frame):
         self.create_widgets()
 
     def create_widgets(self):
-        ttk.Label(self, text='Salvar Valores', anchor='center').grid(row=0, column=0, sticky='ew', columnspan=2, pady=6)
+        # ttk.Label(self, text='Salvar Valores', anchor='center').grid(row=0, column=0, sticky='ew', columnspan=2, pady=6)
 
         # ----------- Campo de Data -----------
         ttk.Label(self, text="Data").grid(row=1, column=0, sticky='w', pady=6)
 
-        self.data_var = tk.StringVar(value=TODAY)
-        self.data_entry = ttk.Entry(self, width=20, textvariable=self.data_var)
-        self.data_entry.grid(row=1, column=1, sticky='ew', pady=6)
+        # self.data_var = tk.StringVar(value=TODAY)
+        # self.data_entry = ttk.Entry(self, width=20, textvariable=self.data_var)
+        # self.data_entry.grid(row=1, column=1, sticky='ew', pady=6)
+
+        self.data_entry = DateEntry(
+            self,
+            width=18,
+            date_pattern='dd/MM/yyyy'
+        )
+        self.data_entry.grid(row=1, column=1, stick='ew', pady=6)
 
         # ----------- Campo de Local -----------
         ttk.Label(self, text="Local").grid(row=2, column=0, sticky='w', pady=6)
@@ -60,6 +67,13 @@ class Add_Data(ttk.Frame):
         ttk.Label(self, textvariable=self.dadosadd).grid(
             row=8, column=0, sticky='w', pady=6, columnspan=2
             )
+        
+        # self.data_teste = DateEntry(
+        #     self,
+        #     width=18,
+        #     date_pattern='dd/MM/yyyy'
+        # )
+        # self.data_teste.grid(row=9, column=0, stick='ew', pady=6, columnspan=2)
 
         self.columnconfigure(1, weight=1)
         self.columnconfigure(0, weight=0)
