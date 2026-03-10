@@ -6,9 +6,13 @@ import pandas as pd
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from tkcalendar import DateEntry
+import matplotlib.pyplot as plt
+import numpy as np
 
 TODAY = datetime.now().strftime("%d/%m")
+MES_ATUAL = datetime.now().strftime('%m/%y')
 PATH = "/Users/fabioluna/OneDrive - CERN/Swiss Control.xlsx"
+# print(MES_ATUAL)
 
 
 def parse_date_input(value):

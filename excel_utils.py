@@ -26,6 +26,8 @@ def read_last_line(path):
 
     last_values = df.iloc[-1].to_dict()
 
+    print(last_values)
+
     last_data = last_values['Data']
 
     last_local = last_values['Local']
