@@ -1,5 +1,3 @@
-import tkinter as tk
-from tkinter import ttk
 from datetime import datetime
 from openpyxl import load_workbook
 import pandas as pd

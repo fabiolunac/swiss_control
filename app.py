@@ -1,4 +1,6 @@
 from parameters import *
+import tkinter as tk
+from tkinter import ttk
 
 from add_data import Add_Data
     
