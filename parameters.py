@@ -12,7 +12,8 @@ import numpy as np
 TODAY = datetime.now().strftime("%d/%m")
 MES_ATUAL = datetime.now().strftime('%m/%y')
 PATH = "/Users/fabioluna/OneDrive - CERN/Swiss Control.xlsx"
-# print(MES_ATUAL)
+CERN_BLUE = '#0053A1'
+GRAPH_COLOR = '#b82b30'
 
 
 def parse_date_input(value):

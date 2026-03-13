@@ -7,7 +7,7 @@ class App:
     def __init__(self, root):
         self.root = root
         self.root.title('FINANCE APP')
-        self.root.geometry('500x700')
+        self.root.geometry('400x500')
 
         self.root.bind("<Escape>", lambda event: self.root.destroy())
         self.root.bind("<Return>", lambda event: self.Add_Data.salvar())
@@ -25,8 +25,8 @@ class App:
         self.Visualize_Data = Visualize_Data(self.notebook)
 
         # Add abas no notebook
-        self.notebook.add(self.Add_Data, text='Adicionar')
-        self.notebook.add(self.Visualize_Data, text='Visualizar')
+        self.notebook.add(self.Add_Data, text='Add Data')
+        # self.notebook.add(self.Visualize_Data, text='Visualizar')
 
     def configurate_style(self):
         self.style = ttk.Style(self.root)
