@@ -1,7 +1,6 @@
 from parameters import *
 
 from add_data import Add_Data
-from visualize_data import Visualize_Data
     
 class App:
     def __init__(self, root):
@@ -22,11 +21,9 @@ class App:
 
         # Instancia as abas
         self.Add_Data       = Add_Data(self.notebook)
-        self.Visualize_Data = Visualize_Data(self.notebook)
 
         # Add abas no notebook
         self.notebook.add(self.Add_Data, text='Add Data')
-        # self.notebook.add(self.Visualize_Data, text='Visualizar')
 
     def configurate_style(self):
         self.style = ttk.Style(self.root)
