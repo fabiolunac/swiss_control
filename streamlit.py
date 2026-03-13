@@ -1,11 +1,13 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
-from excel_utils import prepare_data
+# from excel_utils import prepare_data
 import plotly.express as px
+from datetime import datetime
 
 GRAPH_COLOR = '#b82b30'
 PATH = "/Users/fabioluna/OneDrive - CERN/Swiss Control.xlsx"
+MES_ATUAL = datetime.now().strftime('%m/%y')
 
 def prepare_data():
     df = pd.read_excel(PATH)
