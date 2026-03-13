@@ -2,8 +2,8 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 from excel_utils import prepare_data
-# from parameters import *
 import plotly.express as px
+
 GRAPH_COLOR = '#b82b30'
 
 def personalize_metric():
