@@ -2,6 +2,7 @@ from functions import *
 from tkinter import ttk
 import tkinter as tk
 import sqlite3
+from tkcalendar import DateEntry
 
 class Add_Data(ttk.Frame):
     def __init__(self, parent):

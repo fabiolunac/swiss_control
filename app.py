@@ -36,11 +36,6 @@ class App:
         self.style.configure("TEntry", padding=6)
         self.style.configure("TCombobox", padding=6)
 
-
-
-
-        
-
 if __name__ == "__main__":
     root = tk.Tk()
     app = App(root)
