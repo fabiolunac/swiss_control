@@ -1,6 +1,6 @@
-from parameters import *
 import tkinter as tk
 from tkinter import ttk
+import sqlite3
 
 from add_data import Add_Data
     
@@ -22,7 +22,7 @@ class App:
         self.notebook.pack(expand=True, fill='both')
 
         # Instancia as abas
-        self.Add_Data       = Add_Data(self.notebook)
+        self.Add_Data = Add_Data(self.notebook)
 
         # Add abas no notebook
         self.notebook.add(self.Add_Data, text='Add Data')
@@ -35,6 +35,10 @@ class App:
         self.style.configure("TButton", font=("Arial", 14, "bold"), padding=1)
         self.style.configure("TEntry", padding=6)
         self.style.configure("TCombobox", padding=6)
+
+
+
+
         
 
 if __name__ == "__main__":

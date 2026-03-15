@@ -1,21 +1,20 @@
-from parameters import *
-from excel_utils import *
+from functions import *
+from tkinter import ttk
+import tkinter as tk
+import sqlite3
 
 class Add_Data(ttk.Frame):
     def __init__(self, parent):
         super().__init__(parent)
 
         self.create_widgets()
+        self.create_database()
 
     def create_widgets(self):
         # ttk.Label(self, text='Salvar Valores', anchor='center').grid(row=0, column=0, sticky='ew', columnspan=2, pady=6)
 
         # ----------- Campo de Data -----------
         ttk.Label(self, text="Data").grid(row=1, column=0, sticky='w', pady=6)
-
-        # self.data_var = tk.StringVar(value=TODAY)
-        # self.data_entry = ttk.Entry(self, width=20, textvariable=self.data_var)
-        # self.data_entry.grid(row=1, column=1, sticky='ew', pady=6)
 
         self.data_entry = DateEntry(
             self,
@@ -67,18 +66,26 @@ class Add_Data(ttk.Frame):
         ttk.Label(self, textvariable=self.dadosadd).grid(
             row=8, column=0, sticky='w', pady=6, columnspan=2
             )
-        
-        # self.data_teste = DateEntry(
-        #     self,
-        #     width=18,
-        #     date_pattern='dd/MM/yyyy'
-        # )
-        # self.data_teste.grid(row=9, column=0, stick='ew', pady=6, columnspan=2)
+    
 
         self.columnconfigure(1, weight=1)
         self.columnconfigure(0, weight=0)
 
-    def salvar(self, sheet_name=None):
+    def create_database(self):
+        self.conn = sqlite3.connect('./db/finance_control.db')
+        self.cursor = self.conn.cursor()
+
+        self.cursor.execute("""
+        CREATE TABLE IF NOT EXISTS gastos (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            data TEXT NOT NULL,
+            local TEXT NOT NULL,
+            valor REAL NOT NULL
+        )
+        """)
+        self.conn.commit()
+
+    def salvar(self):
         try:
             data = parse_date_input(self.data_entry.get())
         except ValueError as exc:
@@ -103,7 +110,14 @@ class Add_Data(ttk.Frame):
 
         dados = [data, self.local_entry.get(), valor_chf]
 
-        salvar_dados(PATH, dados)
+        # salvar_dados(PATH, dados)
+        # trocar pra adicionar linhas na DB
+        self.cursor.execute("""
+            INSERT INTO gastos (data, local, valor)
+            VALUES (?, ?, ?)
+            """, (data, self.local_entry.get(), valor_chf))
+        self.conn.commit()
+
 
         dados_line = f"Dados adicionados: \n{data.strftime('%d/%m')} | {self.local_entry.get()} | {valor_chf} CHF"
 

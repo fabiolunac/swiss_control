@@ -1,17 +1,18 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
-# from excel_utils import prepare_data
 import plotly.express as px
 from datetime import datetime
+import pandas as pd
+import sqlite3
 
 GRAPH_COLOR = '#b82b30'
-PATH = "/Users/fabioluna/OneDrive - CERN/Swiss Control.xlsx"
+# PATH = "/Users/fabioluna/OneDrive - CERN/Swiss Control.xlsx"
 MES_ATUAL = datetime.now().strftime('%m/%y')
 
-def prepare_data():
-    df = pd.read_excel(PATH)
-    df_parametros = pd.read_excel(PATH, sheet_name='Parâmetros')
+def prepare_data(con_df, con_param):
+    df = pd.read_sql_query("SELECT * from gastos", con_df)
+    df_parametros = pd.read_sql_query("SELECT * from param", con_param)
 
     df['Data'] = pd.to_datetime(df['Data'])
 
@@ -78,10 +79,14 @@ def personalize_metric():
 
 
 def main():
+
+    con_df    = sqlite3.connect('./db/finance_control.db')
+    con_param = sqlite3.connect('./db/local_param.db')
+
     personalize_metric()
 
     st.title("Finance App")
-    df = prepare_data()
+    df = prepare_data(con_df, con_param)
     
     tab1, tab2 = st.tabs(['Gráficos', 'Tabela'])
 
@@ -223,9 +228,6 @@ def main():
     with tab2:
         st.write('Tabela')
         st.dataframe(df_filtrado[['Data', 'Local', 'Valor', 'Categoria', 'Saldo']])
-
-
-
 
 if __name__ == "__main__":
     main()

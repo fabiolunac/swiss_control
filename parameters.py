@@ -6,6 +6,7 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from tkcalendar import DateEntry
 import matplotlib.pyplot as plt
 import numpy as np
+# from tkinter import ttk 
 
 TODAY = datetime.now().strftime("%d/%m")
 MES_ATUAL = datetime.now().strftime('%m/%y')
