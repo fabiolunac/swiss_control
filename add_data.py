@@ -53,8 +53,8 @@ class Add_Data(ttk.Frame):
         self.btn_salvar.grid(row=5, column=0, columnspan=2, sticky='ew', pady=6)
 
         # ----------- Botão para mostrar saldo -----------
-        self.btn_lastdata= ttk.Button(self, text='Últimos Dados', command=self.read_last_line_method)
-        self.btn_lastdata.grid(row=6, column=0, columnspan=2, sticky='ew', pady=6)
+        # self.btn_lastdata= ttk.Button(self, text='Últimos Dados', command=self.read_last_line_method)
+        # self.btn_lastdata.grid(row=6, column=0, columnspan=2, sticky='ew', pady=6)
 
         # ----------- Label para últimos dados -----------
         self.lastdados_var = tk.StringVar()
@@ -126,10 +126,3 @@ class Add_Data(ttk.Frame):
         self.valor_var.set("")
 
         self.dadosadd.set(dados_line)
-
-    def read_last_line_method(self):
-        data, local, valor = read_last_line(PATH)
-
-        last_line = f"{data.strftime('%d/%m')} | {local} | {valor} CHF"
-
-        self.lastdados_var.set(last_line)
