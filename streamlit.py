@@ -6,52 +6,10 @@ from datetime import datetime
 import pandas as pd
 import sqlite3
 
+from src.database import load_gastos, load_param
+from src.transform_db import prepare_data
+
 GRAPH_COLOR = '#b82b30'
-# PATH = "/Users/fabioluna/OneDrive - CERN/Swiss Control.xlsx"
-MES_ATUAL = datetime.now().strftime('%m/%y')
-
-def prepare_data(con_df, con_param):
-    df = pd.read_sql_query("SELECT * from gastos", con_df)
-    df_parametros = pd.read_sql_query("SELECT * from param", con_param)
-
-    df['Data'] = pd.to_datetime(df['Data'])
-
-    #Criacao das novas colunas
-    df['Categoria'] = df['Local'].map(
-        df_parametros.set_index('Local')['Categoria']
-    ).fillna('Extra')
-
-    df['Pagamento?'] = np.where(
-        (df['Local'] == "CERN") & (df['Valor'] > 3000),
-        "Sim",
-        "Não"
-    )
-    df['Mês Pagamento'] = np.where(
-        df['Data'].dt.day >= 25, 
-        (df['Data'] + pd.DateOffset(months=1)), 
-        df['Data']
-    )
-    df['Mês Pagamento'] = df['Mês Pagamento'].dt.strftime('%m/%y')
-
-
-    saldo = []
-    for i, row in df.iterrows():
-        if i == 0:
-            saldo_atual = 3486
-
-        elif row['Pagamento?'] == 'Sim':
-            saldo_atual = 3486
-
-        else:
-            saldo_atual = saldo[-1] - row['Valor']
-        
-        saldo.append(saldo_atual)
-
-    df['Saldo'] = saldo
-
-    df['Mês Pagamento Atual?'] = np.where(df['Mês Pagamento'] == MES_ATUAL, 'Sim', 'Não')
-
-    return df
 
 def personalize_metric():
     st.markdown("""
@@ -79,44 +37,54 @@ def personalize_metric():
 
 
 def main():
-
-    con_df    = sqlite3.connect('./db/finance_control.db')
-    con_param = sqlite3.connect('./db/local_param.db')
+    df_raw = load_gastos()
+    df_param = load_param()
 
     personalize_metric()
 
     st.title("Finance App")
-    df = prepare_data(con_df, con_param)
+    df = prepare_data(df_raw, df_param)
     
     tab1, tab2 = st.tabs(['Gráficos', 'Tabela'])
 
-    btn_filter = st.sidebar.header('Filtros')
+    st.sidebar.header('Filtros')
 
-    st.sidebar.button('Resetar Filtros')
+    # list all options for columns
+    categoria_options = df['Categoria'].unique()
+    mes_options = df['Mês Pagamento'].unique()
+
+    if st.sidebar.button('Resetar Filtros'):
+        st.session_state['categoria'] = list(categoria_options)
+        st.session_state['mes_pag_atual'] = False
+        st.session_state['mes_pag'] = list(mes_options)
+
+    mes_pagamento_atual = st.sidebar.checkbox(
+        'Mês Pagamento Atual?', 
+        key='mes_pag_atual'
+    )
 
     categoria = st.sidebar.multiselect(
         "Categoria",
         df["Categoria"].unique(),
-        default=df["Categoria"].unique()
-    )
-
-    mes_pagamento_atual = st.sidebar.multiselect(
-        "Mês do Pagamento Atual?",
-        df["Mês Pagamento Atual?"].unique(),
-        default=df["Mês Pagamento Atual?"].unique()
+        default=df["Categoria"].unique(),
+        key='categoria'
     )
 
     mes_pagamento = st.sidebar.multiselect(
         "Mês do Pagamento",
         df["Mês Pagamento"].unique(),
-        default=df["Mês Pagamento"].unique()
+        default=df["Mês Pagamento"].unique(),
+        key='mes_pag'
     )
+
 
     df_filtrado = df[
         df['Categoria'].isin(categoria) &
-        df["Mês Pagamento Atual?"].isin(mes_pagamento_atual) &
         df['Mês Pagamento'].isin(mes_pagamento)
     ]
+
+    if mes_pagamento_atual:
+        df_filtrado = df_filtrado[df_filtrado['Mês Pagamento Atual?'] == 'Sim']
 
     # PAGINA 1
     with tab1:
@@ -126,26 +94,29 @@ def main():
         col1, col2, col3 = st.columns(3)
 
         with col1:
+            salario_total = df_filtrado[df_filtrado['Pagamento?'] == 'Sim']['Valor'].sum()
+
+            st.metric(
+                label='Salário',
+                value=f'{salario_total:.0f} CHF'
+            )
+
+        with col2:
             gastos_totais = df_gastos['Valor'].sum()
 
             st.metric(
-                label='Gasto Total',
+                label='Gastos',
                 value=f'{gastos_totais:.2f} CHF'
             )
-        with col2:
+
+        with col3:
             saldo_guardado = df_filtrado[df_filtrado['Local'] == 'Wise Save']['Valor'].sum()
 
             st.metric(
-                label='Saldo Guardado',
+                label='Save',
                 value=f'{saldo_guardado:.2f} CHF'
             )
-        with col3:
-            saldo_atual = df['Saldo'].iloc[-1]
-
-            st.metric(
-                label='Saldo Atual',
-                value=f'{saldo_atual:.2f} CHF'
-            )
+        
         # ------------------- Gastos por dia -------------------
         
         # gastos_por_dia = df_gastos.groupby('Data')['Valor'].sum().reset_index()
