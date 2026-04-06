@@ -1,30 +1,20 @@
 import pandas as pd
 
-def expenses_per_month(df):
-    ex =  df.groupby('Mês Pagamento')['Valor'].sum().reset_index()
-    ex['Mês Pagamento'] = ex['Mês Pagamento'].dt.to_timestamp().dt.strftime('%m/%y')
 
-    mean = ex['Valor'].mean()
-    
-    return ex, mean
+def expenses_per_column(df, column):
 
-
-
-def expense_category(df):
-    return df.groupby('Categoria')['Valor'].sum().sort_values(ascending=False).reset_index()
+    if column != 'Data' and column != 'Mês Pagamento':
+        exp = df.groupby(column)['Valor'].sum().reset_index().sort_values(by='Valor', ascending=False)
+    else:
+        exp = df.groupby(column)['Valor'].sum().reset_index()
 
 
-def expenses_per_local(df):
-    return df.groupby('Local')['Valor'].sum().sort_values(ascending=False).reset_index()
+    if column == 'Mês Pagamento':
+        exp['Mês Pagamento'] = exp['Mês Pagamento'].dt.to_timestamp().dt.strftime('%m/%y')
 
-def expenses_per_category(df, category):
-    data = df[df['Categoria'] == category].groupby('Mês Pagamento')['Valor'].sum().reset_index()
+    mean = exp['Valor'].mean()
 
-    data['Mês Pagamento'] = data['Mês Pagamento'].dt.to_timestamp().dt.strftime('%m/%y')
-
-    mean = data['Valor'].mean()
-
-    return data, mean
+    return exp, mean
 
 
 

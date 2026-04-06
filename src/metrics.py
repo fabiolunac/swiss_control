@@ -12,4 +12,7 @@ def total_expenses(df):
     return df['Valor'].sum()
 
 def get_total_save(df):
-    return df[df['Local'] == 'Wise Save']['Valor'].sum()
+    return df[df['Local'] == 'Wise Save']['Valor'].sum() - df[df['Local'] == 'Wise Gastos']['Valor'].sum()
+
+def get_wise_expenses(df):
+    return df[df['Local'] == 'Wise Gastos']['Valor'].sum()

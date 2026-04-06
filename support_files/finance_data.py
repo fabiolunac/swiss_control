@@ -14,7 +14,7 @@ def show_menu():
 def read_table(conn):
     df = pd.read_sql_query("SELECT rowid, * from gastos", conn)
 
-    print(df)
+    print(df.tail(50))
 
 # def add_line(conn):
 #     cursor = conn.cursor()

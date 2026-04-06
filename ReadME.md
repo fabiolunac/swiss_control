@@ -101,3 +101,5 @@ O projeto utiliza as seguintes bibliotecas:
 - O sistema **não depende de arquivos Excel**.
 - Todos os dados são armazenados diretamente no banco **SQLite**.
 - O banco de dados é criado automaticamente caso não exista.
+
+uvicorn api:app --host 0.0.0.0 --port 8000

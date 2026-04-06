@@ -11,7 +11,10 @@ def get_connection(path):
 
 def load_gastos():
     with get_connection(DB_GASTOS) as conn:
-        df = pd.read_sql_query("SELECT * from gastos ORDER BY Data ASC", conn)
+        df = pd.read_sql_query(
+            "SELECT rowid AS id, * from gastos ORDER BY Data ASC",
+            conn
+        )
 
         return df
     
@@ -20,3 +23,19 @@ def load_param():
         df_param = pd.read_sql_query("SELECT * from param", conn)
 
         return df_param
+
+def delete_gastos(ids):
+    if not ids:
+        return 0
+
+    placeholders = ",".join("?" for _ in ids)
+
+    with get_connection(DB_GASTOS) as conn:
+        cursor = conn.cursor()
+        cursor.execute(
+            f"DELETE FROM gastos WHERE rowid IN ({placeholders})",
+            ids
+        )
+        conn.commit()
+
+        return cursor.rowcount
